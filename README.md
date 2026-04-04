@@ -191,3 +191,236 @@ Frontend:
 - `npm run build`
 - `npm run lint`
 - `npm run preview`
+
+# 2)PROJECT MANAGEMENT TOOL
+## Project Management System
+
+This repository is a full-stack project management app with separate `frontend` and `backend` folders.
+
+It supports:
+
+- user signup and login with JWT authentication
+- company-based workspaces
+- role-based access for `Admin`, `Manager`, and `Team Member`
+- project creation and company-level project visibility
+- task creation, task assignment, and drag-and-drop Kanban status updates
+- real-time notifications and project chat using Socket.IO
+- sticky notes per project
+- admin analytics and member productivity reports
+- CSV and PDF report export from the frontend
+- email sending for task assignment and task status updates
+
+## What the app actually does
+
+### Authentication and roles
+
+- Users can register with `name`, `email`, `password`, `companyName`, and a role.
+- Supported roles in the code are:
+  - `Admin`
+  - `Manager`
+  - `Team Member`
+- JWT tokens are stored in `localStorage`.
+- A default admin user is seeded automatically when the backend starts:
+  - Email: `admin@admin.com`
+  - Password: `admin123`
+
+### Company-based access
+
+- Each user belongs to a company.
+- Projects, tasks, and users are filtered by company in the backend.
+- Members mainly see projects tied to their company and assigned work.
+
+### Admin / Manager dashboard
+
+The admin-side dashboard includes:
+
+- overview cards for projects, tasks, users, and task status counts
+- project creation and deletion
+- task creation and task assignment
+- bulk project creation
+- bulk round-robin task assignment
+- user list and role updates
+- drag-and-drop Kanban board for company tasks
+- analytics views with charts
+- CSV and PDF export for reports
+
+### Team member dashboard
+
+The member-side dashboard includes:
+
+- project list based on assigned tasks
+- personal task views with status tracking
+- calendar-style due date visibility
+- overdue and upcoming task alerts
+- personal reports with charts
+- CSV and PDF export
+- sticky notes board
+- project chat for projects the user can access
+
+### Project details
+
+Each project detail page shows:
+
+- project summary and progress
+- overdue and completed task counts
+- available team members from the same company
+- a drag-and-drop Kanban board for that project
+
+### Real-time behavior
+
+Socket.IO is used for:
+
+- live notification delivery
+- live task update refreshes
+- project chat messages
+- unread project chat count updates
+
+### Email behavior
+
+If email credentials are configured, the backend sends emails for:
+
+- task assignment
+- task status updates
+
+## Tech stack
+
+### Frontend
+
+- React 19
+- Vite
+- Redux Toolkit
+- React Router
+- Tailwind CSS
+- `@dnd-kit` for drag and drop
+- Recharts for analytics charts
+- Socket.IO client
+- SweetAlert2
+- jsPDF
+
+### Backend
+
+- Node.js
+- Express
+- MongoDB with Mongoose
+- JWT authentication
+- Socket.IO
+- Nodemailer
+
+## Project structure
+
+```text
+project_management/
+├─ backend/
+│  ├─ controllers/
+│  ├─ middleware/
+│  ├─ models/
+│  ├─ routes/
+│  ├─ utils/
+│  └─ server.js
+├─ frontend/
+│  ├─ src/
+│  │  ├─ components/
+│  │  ├─ pages/
+│  │  ├─ redux/
+│  │  └─ services/
+│  └─ package.json
+└─ README.md
+```
+
+## Environment variables
+
+Create a `.env` file inside `backend/` with:
+
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+PORT=5000
+EMAIL_USER=your_gmail_address
+EMAIL_PASS=your_gmail_app_password
+```
+
+Notes:
+
+- `EMAIL_USER` and `EMAIL_PASS` are required if you want task emails to work.
+- The frontend currently uses a hardcoded backend URL: `http://localhost:5000/api`
+- Socket.IO on the frontend also connects to `http://localhost:5000`
+
+## Installation
+
+### 1. Install backend dependencies
+
+```bash
+cd backend
+npm install
+```
+
+### 2. Install frontend dependencies
+
+```bash
+cd frontend
+npm install
+```
+
+## Running the project
+
+### Start the backend
+
+```bash
+cd backend
+npm run dev
+```
+
+The backend:
+
+- connects to MongoDB
+- seeds roles on startup
+- ensures the default admin account exists
+
+### Start the frontend
+
+```bash
+cd frontend
+npm run dev
+```
+
+Frontend default dev server:
+
+- `http://localhost:5173`
+
+Backend default server:
+
+- `http://localhost:5000`
+
+## Seed data
+
+The backend has a seed script:
+
+```bash
+cd backend
+npm run seed
+```
+
+This script creates sample companies/projects/tasks based on existing company and user data.
+
+## Main API areas
+
+The backend exposes routes for:
+
+- `/api/auth`
+- `/api/projects`
+- `/api/tasks`
+- `/api/users`
+- `/api/comments`
+- `/api/activities`
+- `/api/notes`
+- `/api/notifications`
+- `/api/project-chat`
+
+## Current notes about the codebase
+
+These are worth knowing before publishing or deploying:
+
+- frontend API and socket URLs are hardcoded to localhost
+- email sending depends on Gmail credentials in the backend environment
+- the app is built as two separate apps, not a single monorepo script runner
+- the backend seeds roles automatically on startup
